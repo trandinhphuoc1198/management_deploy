@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  management_unicorn:
+    volumes:
+      - static_management:/static
+      - ./django_project/management/:/app/
+    env_file:
+      - ./django_project/.env
+    environment:
+      - TZ=Asia/Ho_Chi_Minh
+    build:
+      context: ./django_project
+    ports:
+      - "8000:8000"
+            
+  management_nginx:
+    image: nginx
+    volumes:
+      - ./nginx/:/etc/nginx/conf.d/
+      - static_management:/static
+      - /opt/MarketPlace_WildCardS:/tmp
+    environment:
+      - TZ=Asia/Ho_Chi_Minh
+    ports:
+      - "88:80"
+      - "448:443"
+    depends_on:
+      - management_unicorn
+  
+
+volumes:
+  static_management:
