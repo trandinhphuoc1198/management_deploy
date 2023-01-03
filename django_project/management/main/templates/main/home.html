@@ -1,0 +1,122 @@
+{% extends "main/base.html" %}
+{% block content %}
+<div class=" d-flex justify-content-center">
+  <h1  class="fs-1 badge bg-primary text-wrap mb-4">{{project}}</h1>
+</div>
+<form method="get">
+  <div class="input-group mb-3">
+    
+    <input type="hidden" name="project" value="{{project_value}}">
+
+    <label class="input-group-text" for="inputGroupSelect01">Status</label>
+    <select name="status" class="form-select" id="inputGroupSelect01">
+      <option value="{{status_value}}" name="status" selected>{{status}}</option>
+      <option value="">All</option>
+      <option value="1">New</option>
+      <option value="2">In Process</option>
+      <option value="3">Resolved</option>
+      <option value="4">Feedback</option>
+      <option value="5">Closed</option>
+      <option value="6">Rejected</option>
+      <option value="7">In Review</option>
+      <option value="8">In JP Review</option>
+    </select>
+    <label class="input-group-text" for="inputGroupSelect02">Assignee</label>
+    <select name="person" class="form-select" id="inputGroupSelect02">
+      <option value="{{person_value}}" selected>{{person}}</option>
+      <option value="">All</option>
+      <option value="52">Phương</option>
+      <option value="57">Khoa</option>
+      <option value="58">Phước</option>
+      <option value="10">Liền</option>
+    </select>
+    <label class="input-group-text" for="inputGroupSelect03">Sort</label>
+    <select name="sort" class="form-select" id="inputGroupSelect03">
+      <option value="{{sort_value}}" selected>{{sort}}</option>
+      <option value="-updated_date">Updated ↓</option>
+      <option value="updated_date">Updated ↑</option>
+      <option value="-spent_time">Spent time ↓</option>
+      <option value="spent_time">Spent time ↑</option>
+    </select>
+    <label class="input-group-text" for="inputGroupSelect04">Limit</label>
+    <select name="limit" class="form-select" id="inputGroupSelect04">
+      <option value="{{limit_value}}" selected>{{limit}}</option>
+      <option value="10">10</option>
+      <option value="20">20</option>
+      <option value="30">30</option>
+      <option value="nolimit">All</option>
+    </select>
+    <button type="submit" class="ml-3 form-control btn btn-primary">OK</button>
+  </div>
+</form>
+<table class="table table-bordered  border-dark table-hover m-auto table-responsive">
+    <thead style="vertical-align: middle;" class="text-center" >
+      <tr class="table-dark">
+        <th scope="col">ID</th>
+        <th style="width: 30ch;" scope="col">Title</th>
+        <th>Type</th>
+        <th>Time Spent</th>
+        <th scope="col">Status</th>
+        <th scope="col">%</th>
+        <th scope="col">Assignee</th>
+        <th style="width: 40ch;" scope="col">Last Comment</th>
+        <th scope="col">Updated</th>
+      </tr>
+    </thead>
+    <tbody style="vertical-align: middle;">
+      
+        {% for task in data %}
+            <tr class="border-dark table-secondary {% if task.grand.status.id == 2 %}table-success {%elif task.grand.status.id == 1%} table-warning {%endif%}">
+                <th class="text-center" scope="row"><a class="text-decoration-none" href="https://redmine.rcvn.work/issues/{{task.grand.id}}" target="_blank">{{task.grand.id}}</a></th>
+                <td><a target="_blank" class="text-decoration-none" href="{% url 'task-view' task.grand.id %}">{{task.grand.task_title}}</a></td>
+                <td class="text-center" >{{task.grand.type.type}}</td>
+                <td class="text-center"> {{task.grand.spent_time}}</td>
+                <td class="text-center" >{{task.grand.status.status}}</td>
+                <td>
+                  <div class="progress " style="width: 10ch;">
+                    <div class="progress-bar bg-danger" role="progressbar" style="width: {{task.grand.done_ratio}}%;" aria-valuenow="{{task.grand.done_ratio}}" aria-valuemin="0" aria-valuemax="100">{{task.grand.done_ratio}}</div>
+                  </div>
+                </td>
+                <td class="text-center">{{task.grand.person_in_charge.name}}</td>
+                <td>{{task.grand.note|truncatechars:50}}</td>
+                <td class="text-center">{{task.grand.updated_date|timesince}}</td>
+            </tr>
+        
+            {% for parent_and_child_task in task.parent_and_child %}
+                {% for parent_or_child_task in parent_and_child_task %}
+                    <tr class="border-dark table-secondary {% if parent_or_child_task.status.id == 2 %} table-success {%elif parent_or_child_task.status.id == 1%} table-warning {%endif%}">
+                        <th scope="row"><a target="_blank" class="text-decoration-none" href="https://redmine.rcvn.work/issues/{{task.grand.id}}">{{parent_or_child_task.id}}</a></th>
+                        {% if forloop.counter == 1 %}
+                        <td><p style="margin-left: 15px;">╚ <a target="_blank" class="text-decoration-none" href="{% url 'task-view' parent_or_child_task.id %}">{{parent_or_child_task.task_title}}</a></p></td>
+                        <td class="text-center">{{parent_or_child_task.type.type}}</td>
+                        <td class="text-center">{{parent_or_child_task.spent_time}}</td>
+                        <td class="text-center">{{parent_or_child_task.status.status}}</td>
+                        <td>
+                          <div class="progress" style="width: 10ch;">
+                            <div class="progress-bar bg-danger" role="progressbar" style="width: {{parent_or_child_task.done_ratio}}%;" aria-valuenow="{{parent_or_child_task.done_ratio}}" aria-valuemin="0" aria-valuemax="100">{{parent_or_child_task.done_ratio}}</div>
+                          </div>
+                        </td>
+                        <td class="text-center">{{parent_or_child_task.person_in_charge.name}}</td>
+                        <td>{{parent_or_child_task.note|truncatechars:50}}</td>
+                        <td class="text-center">{{parent_or_child_task.updated_date|timesince}}</td>
+                        {% else %}
+                        <td><p style="margin-left: 30px;">╚ <a target="_blank" class="text-decoration-none" href="{% url 'task-view' parent_or_child_task.id %}">{{parent_or_child_task.task_title}}</a></p></td>
+                        <td class="text-center">{{parent_or_child_task.type.type}}</td>
+                        <td class="text-center">{{parent_or_child_task.spent_time}}</td>
+                        <td class="text-center">{{parent_or_child_task.status.status}}</td>
+                        <td>
+                          <div class="progress" style="width: 10ch;">
+                            <div class="progress-bar bg-danger" role="progressbar" style="width: {{parent_or_child_task.done_ratio}}%" aria-valuenow="{{parent_or_child_task.done_ratio}}" aria-valuemin="0" aria-valuemax="100">{{parent_or_child_task.done_ratio}}</div>
+                          </div>
+                        </td>
+                        <td class="text-center">{{parent_or_child_task.person_in_charge.name}}</td>
+                        <td>{{parent_or_child_task.note|truncatechars:50}}</td>
+                        <td class="text-center">{{parent_or_child_task.updated_date|timesince}}</td>
+                        {% endif %}
+                    </tr>
+            {% endfor %}
+        {% endfor %}
+    {% endfor %}
+    </tbody>
+  </table>
+{% endblock content %}

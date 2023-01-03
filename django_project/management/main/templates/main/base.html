@@ -1,0 +1,111 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="icon" href="{% static 'images/python_logo.png' %}">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% if title %}
+        <title>[EC-Back-P] - {{title}}</title>
+    {% else %}
+        <title>[EC-Back-P] - Management</title>
+    {% endif %}
+</head>
+<body>
+  
+    <div  class="container mt-5">
+        {%block content%}{%endblock%}
+    </div>
+
+    <nav class="navbar sticky-bottom fixed-bottom navbar-expand-sm navbar-dark bg-dark">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">
+            <img src="{% static 'images/python_logo.png' %}" alt="Logo"  height="35" class="d-inline-block rounded align-text-center">
+            Management</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav " >
+              <div class="btn-group dropup" style="margin: 7px;">
+                <a href="/top" type="button" class="{{path.0}} btn btn-secondary">
+                  All
+                </a>
+                <button type="button" class="{{path.0}} btn btn-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                  <span class="visually-hidden"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="/top?status=1">New</a></li>
+                  <li><a class="dropdown-item" href="/top?status=2">In Process</a></li>
+                  <li><a class="dropdown-item" href="/top?status=1%2C2%2C7%2C8&updateStatus=pending">Pending</a></li>
+                  <li><a class="dropdown-item" href="/top?status=3%2C5%2C6">Finish</a></li>
+                </ul>
+              </div>
+              <div class="btn-group dropup" style="margin: 7px;">
+                <a href="/top?project=1000" type="button" class="{{path.1}} btn btn-secondary">
+                  Shiten
+                </a>
+                <button type="button" class="{{path.1}} btn btn-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                  <span class="visually-hidden"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="/top?project=1000&status=1">New</a></li>
+                  <li><a class="dropdown-item" href="/top?project=1000&status=2">In Process</a></li>
+                  <li><a class="dropdown-item" href="/top?project=1000&status=1%2C2%2C7%2C8&updateStatus=pending">Pending</a></li>
+                  <li><a class="dropdown-item" href="/top?project=1000&status=3%2C5%2C6">Finish</a></li>
+                </ul>
+              </div>
+              <div class="btn-group dropup" style="margin: 7px;">
+                <a href="/top?project=2000" type="button" class=" {{path.2}} btn btn-secondary">
+                  Garage Sales
+                </a>
+                <button type="button" class="{{path.2}} btn btn-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                  <span class="visually-hidden"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="/top?project=2000&status=1">New</a></li>
+                  <li><a class="dropdown-item" href="/top?project=2000&status=2">In Process</a></li>
+                  <li><a class="dropdown-item" href="/top?project=2000&status=1%2C2%2C7%2C8&updateStatus=pending">Pending</a></li>
+                  <li><a class="dropdown-item" href="/top?project=2000&status=3%2C5%2C6">Finish</a></li>
+                </ul>
+              </div>
+              <div class="btn-group dropup" style="margin: 7px;">
+                <a href="/analytics" type="button" class="btn btn-secondary">
+                  Analytics
+                </a>
+                <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                  <span class="visually-hidden"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="/analytics/58">Phước</a></li>
+                  <li><a class="dropdown-item" href="/analytics/57">Khoa</a></li>
+                  <li><a class="dropdown-item" href="/analytics/52">Phương</a></li>
+                  <li><a class="dropdown-item" href="/analytics/10">Liền</a></li>
+                </ul>
+              </div>
+              <div class="btn-group dropup" style="margin: 7px;">
+                <a href="/sync/task" type="button" class="btn btn-secondary">
+                  Sync
+                </a>
+                <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                  <span class="visually-hidden"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="/sync/task">Sync Task</a></li>
+                  <li><a class="dropdown-item" href="/sync/logtime">Sync Logtime</a></li>
+                  <li><a class="dropdown-item" href="/sync/meta-data">Sync Metadata</a></li>
+                </ul>
+              </div>
+            </ul>
+          </div>
+          <form class="d-flex" role="search">
+              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+              <button class="btn btn-outline-success" type="submit">Search</button>
+          </form>
+        </div>
+      </nav>
+    <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>
