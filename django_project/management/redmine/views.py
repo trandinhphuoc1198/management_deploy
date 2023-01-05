@@ -51,6 +51,7 @@ def sync_meta_data(request):
         categories_to_management =[
             Task_Category(id=17,category='Common Project',project_id=3000),
             Task_Category(id=4,category='RBM&B',project_id=1000),
+            Task_Category(id=1,category='EC-Back-P',project_id=1000),
             Task_Category(id=5,category='RBM',project_id=1000),
             Task_Category(id=52,category='RBM-Batch',project_id=1000),
             Task_Category(id=48,category='WebikeGarageSale',project_id=2000),
@@ -107,7 +108,7 @@ def sync_task(request,days=7):
         retry = False
         for task in taskes_to_management:
             try:
-                Task.objects.update_or_create(pk=task['id'],defaults=task)
+                Task.objects.get_or_create(pk=task['id'],defaults=task)
             except IntegrityError as e:
                 sync_specified_task(request,task['parent_task_id_id'])
             except Exception as e:
@@ -138,7 +139,7 @@ def sync_specified_task(request,id=None):
                     'project_id' : project_id,
                     'category_id' : category_id,
                     'note' : '',
-                    'spent_time' : 0,
+                    # 'spent_time' : 0,
                     'estimate_time' : task_from_redmine.estimated_hours,
                     'created_date' : task_from_redmine.created_on,
                     'updated_date' : task_from_redmine.updated_on

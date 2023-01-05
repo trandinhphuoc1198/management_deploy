@@ -2,6 +2,7 @@ version: '3'
 
 services:
   management_unicorn:
+    restart: always
     volumes:
       - static_management:/static
       - ./django_project/management/:/app/
@@ -16,6 +17,7 @@ services:
             
   management_nginx:
     image: nginx
+    restart: always
     volumes:
       - ./nginx/:/etc/nginx/conf.d/
       - static_management:/static
