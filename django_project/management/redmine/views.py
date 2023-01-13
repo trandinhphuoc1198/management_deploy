@@ -98,7 +98,7 @@ def sync_task(request,days=7):
                 'project_id' : project_id,
                 'category_id' : category_id,
                 'note' : '',
-                'spent_time' : 0,
+                # 'spent_time' : 0,
                 'estimate_time' : task.estimated_hours,
                 'created_date' : task.created_on,
                 'updated_date' : task.updated_on
@@ -108,8 +108,23 @@ def sync_task(request,days=7):
         retry = False
         for task in taskes_to_management:
             try:
-                Task.objects.get_or_create(pk=task['id'],defaults=task)
+                Task.objects.update_or_create(
+                    pk=task['id'],
+                    defaults = {
+                        'pk': task['id'],
+                        'task_title': task['task_title'],
+                        'done_ratio': task['done_ratio'],
+                        'parent_task_id_id': task['parent_task_id_id'],
+                        'description': task['description'],
+                        'type_id': task['type_id'],
+                        'priority': task['priority'],
+                        'project_id': task['project_id'],
+                        'category_id': task['category_id'],
+                        'estimate_time': task['estimate_time']
+                    })
             except IntegrityError as e:
+                print(task['id'])
+                print(e)
                 sync_specified_task(request,task['parent_task_id_id'])
             except Exception as e:
                 print('=============',task['id'],'==============')

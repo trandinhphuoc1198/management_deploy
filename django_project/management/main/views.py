@@ -42,6 +42,9 @@ def home_view(request):
                     if task not in getParentList(data[task_index]):
                         data[task_index]['parent_and_child'].append([task])
                     continue
+                else:
+                    data.append({'grand':parent_task,'parent_and_child':[[task],]})
+                    continue
             if task not in getGrands(data):
                 data.append({'grand':task,'parent_and_child':[]})
     except IndexError:
@@ -49,7 +52,6 @@ def home_view(request):
         limit_value = len(task_list)
     current_page = [None,'active',None] if request.GET.get('project')=='1000' else \
         ([None,None,'active'] if request.GET.get('project')=='2000' else ['active',None,None])
-    
     context = {
         'data' : data,
         'path' : current_page,
