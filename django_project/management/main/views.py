@@ -9,7 +9,7 @@ def home_view(request):
     date_time = (today-timedelta(days=7),today) if request.GET.get('updateStatus')=='inprocess' \
                 else (today-timedelta(days=60),today-timedelta(days=10)) if request.GET.get('updateStatus')=='pending' else (today-timedelta(days=365),today)
     status = [1,2,3,4,5,6,7,8] if not request.GET.get('status') else [int(status) for status in request.GET.get('status').split(',')]
-    person = [57,58,52,10,11] if not request.GET.get('person') else [int(person) for person in request.GET.get('person').split(',')] 
+    person = [20,57,58,52,10,11] if not request.GET.get('person') else [int(person) for person in request.GET.get('person').split(',')] 
     sort = '-updated_date' if not request.GET.get('sort') else request.GET.get('sort')
     filters = {
         'project__in' : project,

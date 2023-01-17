@@ -108,10 +108,11 @@ def sync_task(request,days=7):
         retry = False
         for task in taskes_to_management:
             try:
-                Task.objects.update_or_create(
+                existed  = Task.objects.filter(pk=task['id'])
+                if existed:
+                    Task.objects.update_or_create(
                     pk=task['id'],
                     defaults = {
-                        'pk': task['id'],
                         'task_title': task['task_title'],
                         'done_ratio': task['done_ratio'],
                         'parent_task_id_id': task['parent_task_id_id'],
@@ -122,6 +123,8 @@ def sync_task(request,days=7):
                         'category_id': task['category_id'],
                         'estimate_time': task['estimate_time']
                     })
+                else:
+                    Task.objects.create(**task).save()
             except IntegrityError as e:
                 print(task['id'])
                 print(e)
@@ -190,6 +193,7 @@ def sync_logtime(request,days=7):
             LogTime.objects.update_or_create(pk=logtime['id'],defaults=logtime)
         except IntegrityError:
             sync_specified_task(request,logtime['task_id_id'])
+            LogTime.objects.update_or_create(pk=logtime['id'],defaults=logtime)
         except Exception as e:
             print('=============',logtime['id'],'==============')
             return HttpResponse(e)
